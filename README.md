@@ -111,6 +111,35 @@ Define the gate in a service provider:
 Gate::define('manage-api-tokens', fn (User $user) => $user->isAdmin());
 ```
 
+The user menu item follows the same gate, so users who can't open the page don't see the link.
+
+### Extending the page
+
+To build abilities in code instead of the config list, extend the page and the plugin:
+
+```php
+use Devtical\Sanctum\Pages\Sanctum;
+use Devtical\Sanctum\SanctumPlugin;
+
+class ApiTokens extends Sanctum
+{
+    protected function getAbilityOptions(): array
+    {
+        return ['reports:read' => 'Read reports'];
+    }
+}
+
+class ApiTokensPlugin extends SanctumPlugin
+{
+    protected function getPage(): string
+    {
+        return ApiTokens::class;
+    }
+}
+```
+
+Register `ApiTokensPlugin::make()` on your panel in place of `SanctumPlugin::make()`. The page's other protected methods, such as `getCreateTokenFormSchema()` and `getTableColumns()`, can be overridden the same way.
+
 ## Testing
 
 ```bash

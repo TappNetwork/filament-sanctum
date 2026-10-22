@@ -23,18 +23,29 @@ class SanctumPlugin implements Plugin
     {
         $panel
             ->pages([
-                Sanctum::class,
+                $this->getPage(),
             ]);
+    }
+
+    /**
+     * @return class-string<Sanctum>
+     */
+    protected function getPage(): string
+    {
+        return Sanctum::class;
     }
 
     public function boot(Panel $panel): void
     {
         if (config('filament-sanctum.navigation.user_menu.enabled')) {
+            $page = $this->getPage();
+
             $panel->userMenuItems([
                 Action::make('sanctum')
-                    ->label(trans('Sanctum'))
-                    ->url(fn (): string => Sanctum::getUrl(panel: $panel->getId()))
-                    ->icon(config('filament-sanctum.navigation.icon', 'heroicon-o-finger-print')),
+                    ->label(fn (): string => $page::getNavigationLabel())
+                    ->url(fn (): string => $page::getUrl(panel: $panel->getId()))
+                    ->icon(fn (): string => $page::getNavigationIcon())
+                    ->visible(fn (): bool => $page::canAccess()),
             ]);
         }
     }

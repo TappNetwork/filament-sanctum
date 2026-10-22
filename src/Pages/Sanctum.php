@@ -11,6 +11,7 @@ use Filament\Forms;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables;
@@ -201,7 +202,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
     }
 
     /**
-     * @return array<int, \Filament\Schemas\Components\Component>
+     * @return array<int, Component>
      */
     protected function getCreateTokenFormSchema(): array
     {
@@ -235,8 +236,9 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
             ...$expirationFields,
             Forms\Components\CheckboxList::make('abilities')
                 ->label(trans('Abilities'))
-                ->options(config('filament-sanctum.abilities.list'))
-                ->columns(config('filament-sanctum.abilities.columns')),
+                ->options(fn (): array => $this->getAbilityOptions())
+                ->columns(config('filament-sanctum.abilities.columns'))
+                ->bulkToggleable(),
         ];
     }
 
@@ -360,9 +362,17 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
             return null;
         }
 
-        $list = config('filament-sanctum.abilities.list', []);
+        return $this->getAbilityOptions()[$state] ?? (string) $state;
+    }
 
-        return $list[$state] ?? (string) $state;
+    /**
+     * The abilities a new token can be given, keyed by ability with a human label.
+     *
+     * @return array<string, string>
+     */
+    protected function getAbilityOptions(): array
+    {
+        return config('filament-sanctum.abilities.list', []);
     }
 
     /**

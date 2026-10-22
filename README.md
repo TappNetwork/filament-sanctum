@@ -2,6 +2,8 @@
 
 Manage Laravel Sanctum personal access tokens from your Filament panel.
 
+This is the Tapp Network fork of [devtical/filament-sanctum](https://github.com/devtical/filament-sanctum). It replaces `devtical/filament-sanctum`, keeps the `Devtical\Sanctum` namespace, and adds the extension points described under [Extending the page](#extending-the-page).
+
 <p align="center">
     <img src="./art/create-token.png" alt="Create Token">
     <img src="./art/token-created.png" alt="Token Created">
@@ -12,7 +14,7 @@ Manage Laravel Sanctum personal access tokens from your Filament panel.
 Install the package and Sanctum:
 
 ```bash
-composer require devtical/filament-sanctum laravel/sanctum
+composer require tapp/filament-sanctum laravel/sanctum
 ```
 
 Publish Sanctum and run migrations:

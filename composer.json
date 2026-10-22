@@ -1,13 +1,14 @@
 {
-    "name": "devtical/filament-sanctum",
-    "description": "Manage Laravel Sanctum personal access tokens from your Filament panel",
+    "name": "tapp/filament-sanctum",
+    "description": "Manage Laravel Sanctum personal access tokens from your Filament panel. Tapp Network fork of devtical/filament-sanctum.",
     "keywords": [
+        "tapp",
         "devtical",
         "sanctum",
         "laravel",
         "filament"
     ],
-    "homepage": "https://github.com/devtical/filament-sanctum",
+    "homepage": "https://github.com/TappNetwork/filament-sanctum",
     "license": "MIT",
     "authors": [
         {
@@ -26,6 +27,9 @@
         "laravel/pint": "^1.0",
         "orchestra/testbench": "^10.0|^11.0",
         "pestphp/pest": "^4.0"
+    },
+    "replace": {
+        "devtical/filament-sanctum": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -53,6 +57,10 @@
             "providers": [
                 "Devtical\\Sanctum\\SanctumServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev",
+            "dev-feat/extensible-token-page": "1.2.x-dev"
         }
     },
     "minimum-stability": "stable",

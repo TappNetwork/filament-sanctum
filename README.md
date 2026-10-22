@@ -142,6 +142,15 @@ class ApiTokensPlugin extends SanctumPlugin
 
 Register `ApiTokensPlugin::make()` on your panel in place of `SanctumPlugin::make()`. The page's other protected methods, such as `getCreateTokenFormSchema()` and `getTableColumns()`, can be overridden the same way.
 
+A subclass can also read its settings from its own config file. Give the file the same structure as `config/filament-sanctum.php` and return its key:
+
+```php
+public static function getConfigKey(): string
+{
+    return 'api-tokens';
+}
+```
+
 ## Testing
 
 ```bash

@@ -37,9 +37,9 @@ class SanctumPlugin implements Plugin
 
     public function boot(Panel $panel): void
     {
-        if (config('filament-sanctum.navigation.user_menu.enabled')) {
-            $page = $this->getPage();
+        $page = $this->getPage();
 
+        if ($page::setting('navigation.user_menu.enabled')) {
             $panel->userMenuItems([
                 Action::make('sanctum')
                     ->label(fn (): string => $page::getNavigationLabel())

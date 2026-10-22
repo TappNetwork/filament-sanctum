@@ -30,14 +30,28 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
 
     protected string $view = 'filament-sanctum::pages.sanctum';
 
+    /**
+     * The config file the page reads its settings from. Override it to give a
+     * subclass its own config file with the same structure.
+     */
+    public static function getConfigKey(): string
+    {
+        return 'filament-sanctum';
+    }
+
+    public static function setting(string $key, mixed $default = null): mixed
+    {
+        return config(static::getConfigKey().'.'.$key, $default);
+    }
+
     public static function getNavigationIcon(): string
     {
-        return config('filament-sanctum.navigation.icon', 'heroicon-o-finger-print');
+        return static::setting('navigation.icon', 'heroicon-o-finger-print');
     }
 
     public static function getDefaultSlug(): string
     {
-        return config('filament-sanctum.navigation.slug', 'sanctum');
+        return static::setting('navigation.slug', 'sanctum');
     }
 
     public function getTitle(): string
@@ -47,12 +61,12 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
 
     public static function getNavigationGroup(): ?string
     {
-        return config('filament-sanctum.navigation.sidebar_menu.group', null);
+        return static::setting('navigation.sidebar_menu.group', null);
     }
 
     public static function getNavigationSort(): ?int
     {
-        return config('filament-sanctum.navigation.sidebar_menu.sort', -1);
+        return static::setting('navigation.sidebar_menu.sort', -1);
     }
 
     public static function getNavigationLabel(): string
@@ -62,16 +76,16 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
 
     public static function shouldRegisterNavigation(): bool
     {
-        return config('filament-sanctum.navigation.sidebar_menu.enabled');
+        return static::setting('navigation.sidebar_menu.enabled');
     }
 
     public static function canAccess(): bool
     {
-        if (! config('filament-sanctum.authorization.enabled')) {
+        if (! static::setting('authorization.enabled')) {
             return true;
         }
 
-        $gate = config('filament-sanctum.authorization.gate');
+        $gate = static::setting('authorization.gate');
 
         if (blank($gate)) {
             return true;
@@ -210,7 +224,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
             ->label(trans('Token Name'))
             ->required();
 
-        $expirationFields = config('filament-sanctum.abilities.allow_expiration')
+        $expirationFields = static::setting('abilities.allow_expiration')
             ? [
                 Grid::make(2)
                     ->schema([
@@ -237,7 +251,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
             Forms\Components\CheckboxList::make('abilities')
                 ->label(trans('Abilities'))
                 ->options(fn (): array => $this->getAbilityOptions())
-                ->columns(config('filament-sanctum.abilities.columns'))
+                ->columns(static::setting('abilities.columns'))
                 ->bulkToggleable(),
         ];
     }
@@ -247,7 +261,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
      */
     protected function resolveTokenExpiration(array $data): ?Carbon
     {
-        if (! config('filament-sanctum.abilities.allow_expiration')) {
+        if (! static::setting('abilities.allow_expiration')) {
             return null;
         }
 
@@ -267,7 +281,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
     {
         $options = [];
 
-        foreach (config('filament-sanctum.abilities.expiration_presets', [7, 30, 60, 90]) as $days) {
+        foreach (static::setting('abilities.expiration_presets', [7, 30, 60, 90]) as $days) {
             $options[(string) $days] = trans(':days days (:date)', [
                 'days' => $days,
                 'date' => now()->addDays((int) $days)->format('M j, Y'),
@@ -282,7 +296,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
 
     protected function getDefaultExpirationValue(): string
     {
-        $defaultDays = config('filament-sanctum.abilities.default_expiration_days');
+        $defaultDays = static::setting('abilities.default_expiration_days');
 
         if (blank($defaultDays)) {
             return 'never';
@@ -290,7 +304,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
 
         $presets = array_map(
             strval(...),
-            config('filament-sanctum.abilities.expiration_presets', [7, 30, 60, 90]),
+            static::setting('abilities.expiration_presets', [7, 30, 60, 90]),
         );
 
         return in_array((string) $defaultDays, $presets, true)
@@ -372,7 +386,7 @@ class Sanctum extends Page implements Tables\Contracts\HasTable
      */
     protected function getAbilityOptions(): array
     {
-        return config('filament-sanctum.abilities.list', []);
+        return static::setting('abilities.list', []);
     }
 
     /**

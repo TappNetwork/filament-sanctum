@@ -78,6 +78,7 @@ class IntegrationTest extends TestbenchTestCase
         Config::set('filament-sanctum.navigation.slug', 'api-tokens');
 
         $this->assertSame('api-tokens', Sanctum::getDefaultSlug());
+        $this->assertSame('api-tokens', Sanctum::getSlug());
     }
 
     public function test_sanctum_page_url_resolves()
